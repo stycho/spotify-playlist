@@ -6,7 +6,7 @@ import './App.css';
 //#000000 black
 //#FFA200 orange
 //#002957 dark blue
-//#C2C2C2 light grey
+//#C2C2C2 light grey womp
 
 let defaultStyle = {
   color: '#C2C2C2',
