@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 //#222222 dark grey
 //#000000 black
 //#FFA200 orange
 //#002957 dark blue
-//#C2C2C2 light grey womp
+//#C2C2C2 light grey
 
 let defaultStyle = {
   color: '#C2C2C2',
