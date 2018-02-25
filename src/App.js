@@ -13,34 +13,6 @@ let defaultStyle = {
   margin: '5px'
 };
 
-// let fakeData = {
-//   user: {
-//     name: 'Sean',
-//     playlists: [
-//       {
-//         name: 'Bangers',
-//         songs: ['Womp', 'Fissures', 'bloopin'],
-//         duration: 12
-//       },
-//       {
-//         name: 'Favorites count',
-//         songs: ['Thing Thing', 'Nevermind', 'Take it away'],
-//         duration: 9
-//       },
-//       {
-//         name: 'Michelle',
-//         songs: ['Frog toots', 'Screaming toads', 'Yoddling goats', 'whispering Dirt'],
-//         duration: 17
-//       },
-//       {
-//         name: 'Country',
-//         songs: ['My truck', 'My Horse', 'My gun', 'My girl'],
-//         duration: 16
-//       }
-//     ],
-//   }
-// }
-
 class Playlist extends Component {
   render() {
     return(
@@ -106,6 +78,9 @@ class App extends Component {
     let parsed = queryString.parse(window.location.search);
     let accessToken = parsed.access_token;
 
+    if (!accessToken)
+      return;
+
     fetch('https://api.spotify.com/v1/me', {
       headers: {'Authorization': 'Bearer ' + accessToken}
     })
@@ -145,7 +120,7 @@ class App extends Component {
       {
         this.state.user ? 
         <div>
-          <h1>{this.state.user.name}'s Playlists</h1>
+          <h1>{this.state.user}'s Playlists</h1>
           <PlaylistCounter playlists={playlistsToRender}/>
           <HoursCounter playlists={playlistsToRender}/>
           <Filter onTextChange={text => this.setState({filterString: text})}/>
