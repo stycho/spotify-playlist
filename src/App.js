@@ -56,7 +56,7 @@ class Filter extends Component {
     return(
       <div style={{...defaultStyle}}>
         <img/>
-        <input type="text"/>
+        <input type="text" onKeyUp={event => this.props.onTextChange(event.target.value)} />
       </div>
     );
   }
@@ -67,8 +67,6 @@ class HoursCounter extends Component {
     let totalDuration = this.props.playlists.reduce((acc, cur) => {
       return acc + cur.duration;
     }, 0);
-
-    console.log(totalDuration);
 
     return(
       <div style={{...defaultStyle, display: 'inline-block'}}>
@@ -91,13 +89,20 @@ class PlaylistCounter extends Component {
 class App extends Component {
   constructor() {
     super();
-    this.state = {serverData: {}};
+    this.state = {
+      serverData: {},
+      filterString: ''
+    };
   }
   
   componentDidMount() {
     setTimeout(() => {
       this.setState({serverData: fakeData});
-    }, 1000)
+    }, 1000);
+
+    setTimeout(() => {
+      this.setState({filterString: ''});
+    }, 2000);
   }
 
   render() {
@@ -108,8 +113,12 @@ class App extends Component {
         <h1>{this.state.serverData.user.name}'s Playlists</h1>
         <PlaylistCounter playlists={this.state.serverData.user.playlists}/>
         <HoursCounter playlists={this.state.serverData.user.playlists}/>
-        <Filter/>
-        {this.state.serverData.user.playlists.map(playlist => 
+        <Filter onTextChange={text => this.setState({filterString: text})}/>
+        {this.state.serverData.user.playlists
+          .filter(playlist => 
+            playlist.name.toLowerCase()
+              .includes(this.state.filterString.toLowerCase())
+          ).map(playlist => 
           <Playlist playlist={playlist}/>
         )}
 
