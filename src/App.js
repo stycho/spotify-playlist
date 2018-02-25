@@ -22,7 +22,7 @@ let fakeData = {
         duration: 12
       },
       {
-        name: 'Favorites',
+        name: 'Favorites count',
         songs: ['Thing Thing', 'Nevermind', 'Take it away'],
         duration: 9
       },
@@ -30,6 +30,11 @@ let fakeData = {
         name: 'Michelle',
         songs: ['Frog toots', 'Screaming toads', 'Yoddling goats', 'whispering Dirt'],
         duration: 17
+      },
+      {
+        name: 'Country',
+        songs: ['My truck', 'My Horse', 'My gun', 'My girl'],
+        duration: 16
       }
     ],
   }
@@ -106,19 +111,20 @@ class App extends Component {
   }
 
   render() {
+    let playlistsToRender = this.state.serverData.user ? this.state.serverData.user.playlists
+    .filter(playlist => 
+      playlist.name.toLowerCase()
+        .includes(this.state.filterString.toLowerCase())
+    ) : []
     return (
       <div className='App' style={{...defaultStyle}}>
       {this.state.serverData.user ? 
       <div>
         <h1>{this.state.serverData.user.name}'s Playlists</h1>
-        <PlaylistCounter playlists={this.state.serverData.user.playlists}/>
-        <HoursCounter playlists={this.state.serverData.user.playlists}/>
+        <PlaylistCounter playlists={playlistsToRender}/>
+        <HoursCounter playlists={playlistsToRender}/>
         <Filter onTextChange={text => this.setState({filterString: text})}/>
-        {this.state.serverData.user.playlists
-          .filter(playlist => 
-            playlist.name.toLowerCase()
-              .includes(this.state.filterString.toLowerCase())
-          ).map(playlist => 
+        {playlistsToRender.map(playlist => 
           <Playlist playlist={playlist}/>
         )}
 
