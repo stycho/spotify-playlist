@@ -17,7 +17,7 @@ class Playlist extends Component {
   render() {
     return(
       <div style={{...defaultStyle, width: '30%', display: 'inline-block'}}>
-        <img src={this.props.playlist.image} style={{width: '80px'}}/>
+        <img src={this.props.playlist.image} style={{width: '80px', borderRadius: '40px'}}/>
         <h3>{this.props.playlist.name}</h3>
         <ul>
           {this.props.playlist.songs.map(songs => {
@@ -69,6 +69,7 @@ class App extends Component {
     super();
     this.state = {
       user: '',
+      dispPic: '',
       filterString: '',
       playlists: []
     };
@@ -86,13 +87,19 @@ class App extends Component {
     })
       .then(resp => resp.json())
       .then(data => {
-        this.setState({user: data.display_name})
-          console.log(this.state.user);
+        this.setState({user: data.display_name});
+        this.setState({dispPic: data.images[0].url});
+          console.log(data.images[0].url);
     });
 
     fetch('https://api.spotify.com/v1/me/playlists', {
       headers: {'Authorization': 'Bearer ' + accessToken}
     }).then(resp => resp.json())
+      // .then(data => {
+      //   data.items.map(playlist => {
+      //     fetch(playlist.tracks.href, )
+      //   })
+      // })
       .then(data => {
         return this.setState({playlists: data.items
           .map(item => ({
@@ -120,7 +127,8 @@ class App extends Component {
       {
         this.state.user ? 
         <div>
-          <h1>{this.state.user}'s Playlists</h1>
+          <img src={this.state.dispPic} style={{width: '120px', borderRadius: '50%'}}/>
+          <h1 style={{color: '#FFA200'}}>{this.state.user}</h1>
           <PlaylistCounter playlists={playlistsToRender}/>
           <HoursCounter playlists={playlistsToRender}/>
           <Filter onTextChange={text => this.setState({filterString: text})}/>
@@ -128,8 +136,14 @@ class App extends Component {
             <Playlist playlist={playlist}/>
           )}
         </div> : 
-        <button style={{padding: '20px'}} 
-          onClick={() => window.location='http://localhost:8888/login'}>Sign in with Spotify</button>
+        <button style={{padding: '20px', backgroundColor: '#1db954', fontSize: '1.5em', borderWidth: '0', color: 'white', borderRadius: '35px'}} 
+          onClick={() => {
+            if (window.location.href.includes('localhost')){
+              return window.location='http://localhost:8888/login';
+            } else {
+              return window.location='https://better-pl-backend.herokuapp.com/login';
+            }
+          }}>Sign in with Spotify</button>
       }
       </div>
     );
